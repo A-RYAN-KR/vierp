@@ -98,9 +98,47 @@
         }
 
         /* --- STUDENT BAR --- */
-        .student-info-bar { height: 50px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; padding: 0 16px; font-size: 14px; }
-        .profile-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 12px; }
-        .v-chip-active { background-color: rgba(76, 175, 80, 0.12); color: #2e7d32; padding: 0 12px; height: 28px; border-radius: 16px; display: inline-flex; align-items: center; font-size: 0.75rem; font-weight: 500; margin-left: 8px; }
+        .student-info-bar { width: 100%; height: 75px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; padding: 0 24px; font-size: 16px; background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); margin: 0; box-sizing: border-box; padding-left: 182px; }
+        .profile-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin-right: 12px; }
+        .v-chip-active { background-color: rgba(76, 175, 80, 0.12); color: #4caf50; padding: 0 14px; height: 34px; border-radius: 16px; display: inline-flex; align-items: center; font-size: 0.95rem; font-weight: 600; margin-left: 8px; }
+        .v-chip-active i { font-size: 14px; margin-right: 8px; line-height: 1; }
+
+        .timer-card {
+            position: relative;
+            left: 0;
+            right: 0;
+            width: 100vw;
+            margin: 20px calc(50% - 50vw) 0;
+            background:  #FFFF00;
+            border: 1px solid #f4e27c;
+            border-radius: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70px;
+            padding: 12px 24px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            color: #ff0000;
+            font-weight: 700;
+            font-size: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .timer-card::before,
+        .timer-card span::before {
+            content: none !important;
+        }
+
+        .timer-card span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
+            font-size: 1.25rem;
+            letter-spacing: 0.02em;
+        }
 
         /* --- IDE TOOLBAR --- */
         .ide-toolbar {
@@ -194,7 +232,7 @@
 <body>
 
     <!-- Updated Header -->
-    <header class="v-toolbar__content" style="height: 74px;">
+    <header class="v-toolbar__content" style="height: 90px;">
         <div class="header-left">
             <div class="logo-box">
                 <img src="https://vierp-test.s3.ap-south-1.amazonaws.com/logo/vit_logo.png" alt="Logo">
@@ -224,12 +262,16 @@
     </header>
 
     <!-- Student Info Bar -->
-    <div class="student-info-bar" style="height: 68px; margin-left: 185px; font-size: 16px; font-weight: 700; gap: 1px;">
-        <img src="https://vierp.s3.ap-south-1.amazonaws.com/cloud/studentprofile/icard/photo/12310601photo.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260504T183322Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIASPWL33DPXKP2C67Z%2F20260504%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=c1f220c2c595402b0d34fe1c44df92de29a3a574ac8d13c9dfa54d2f61e25e59" class="profile-img">
+    <div class="student-info-bar" style="font-weight: 700; gap: 1px;">
+        <img src="profile.jpeg" class="profile-img">
         <span style="font-weight: 700; color: #757575;">ADITYA PADME</span>
-        <div class="v-chip-active"><i class="mdi mdi-checkbox-blank-circle" style="font-size: 10px; margin-right: 5px;"></i> Active</div>
+        <div class="v-chip-active"><i class="mdi mdi-checkbox-blank-circle" aria-hidden="true"></i> Active</div>
         <span style="margin-left: 24px; font-weight: 700; color: #757575;">Registration No: 12310353</span>
         <span style="margin-left: 24px; font-weight: 700; color: #757575;">BTech-Electronics and Telecommunication Engg</span>
+    </div>
+
+    <div class="timer-card">
+        <span><strong id="countdown-timer">03:00:00</strong></span>
     </div>
 
     <!-- IDE Workspace (Iframe replaces custom editor) -->
@@ -275,5 +317,29 @@
     </div>
 </footer>
 
+<script>
+    const timerElement = document.getElementById('countdown-timer');
+    let remainingSeconds = 3 * 60 * 60;
+
+    function formatTime(seconds) {
+        const hrs = Math.floor(seconds / 3600).toString().padStart(2, '0');
+        const mins = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+        const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+        return `${hrs}:${mins}:${secs}`;
+    }
+
+    function updateTimer() {
+        timerElement.textContent = formatTime(remainingSeconds);
+        if (remainingSeconds <= 0) {
+            clearInterval(countdownInterval);
+            timerElement.textContent = '00:00:00';
+            return;
+        }
+        remainingSeconds -= 1;
+    }
+
+    const countdownInterval = setInterval(updateTimer, 1000);
+    updateTimer();
+</script>
 </body>
 </html>
